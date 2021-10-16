@@ -1,0 +1,11 @@
+{% if flash %}
+  {% if flash.kind == "error" %}
+    <div class="flash flash-error">{{ flash.message }}</div>
+  {% elif flash.kind == "warning" %}
+    <div class="flash flash-warning">{{ flash.message }}</div>
+  {% elif flash.kind == "success" %}
+    <div class="flash flash-success">{{ flash.message }}</div>
+  {% else %}
+    <div class="flash">{{ flash.message }}</div>
+  {% endif %}
+{% endif %}
