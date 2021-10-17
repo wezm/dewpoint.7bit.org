@@ -1,0 +1,15 @@
+task:
+  name: Build (Alpine Linux)
+  container:
+    image: alpine:3.14
+    cpu: 8
+  environment:
+    PATH: "$HOME/.cargo/bin:$PATH"
+  cargo_cache:
+    folder: $HOME/.cargo/registry
+    fingerprint_script: cat Cargo.lock
+  install_script:
+    - apk --update add gcc musl-dev cargo
+  test_script:
+    - cargo test
+  before_cache_script: rm -rf $HOME/.cargo/registry/index
