@@ -1,7 +1,6 @@
-use rocket::request::FlashMessage;
-
 use askama::Template;
 use rocket::form::Form;
+use rocket::request::FlashMessage;
 use rocket::{Route, State};
 
 use dewpoint::openweather::OneCall;
@@ -66,5 +65,13 @@ async fn forecast<'f>(
         title: format!("Forecast for {}", form.locality),
         forecast,
         flash,
+    }
+}
+
+mod filters {
+    use std::env;
+
+    pub fn git_revision(_: &str) -> ::askama::Result<String> {
+        Ok(env::var("DEWPOINT_REVISION").unwrap_or_else(|_| String::from("dev")))
     }
 }
