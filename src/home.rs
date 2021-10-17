@@ -1,33 +1,77 @@
-use rocket::request::FlashMessage;
-use rocket::response::{Debug, Flash, Redirect};
-use rocket::serde::Serialize;
-use rocket::Route;
-use rocket_dyn_templates::Template;
 use std::convert::Infallible;
+
+use rocket::request::FlashMessage;
+use rocket::response::{Debug, Flash, Redirect, Responder};
+use rocket::serde::Serialize;
+use rocket::{Request, Route, State};
+use rocket::form::Form;
+use askama::Template;
+
+use dewpoint::DewpointConfig;
+use dewpoint::openweather::OneCall;
+
+// These are to make the compiler rebuild when they change
+// TODO: Check that they don't end up in the final binary
+const _HOME: &[u8] = include_bytes!("../templates/home.html");
+const _FORECAST: &[u8] = include_bytes!("../templates/forecast.html");
 
 pub fn routes() -> Vec<Route> {
     routes![
         home,
+        forecast
     ]
 }
 
-#[derive(Serialize)]
-#[serde(crate = "rocket::serde")]
+#[derive(Template)]
+#[template(path = "home.html")]
 struct HomeContext<'f> {
     title: String,
     flash: Option<FlashMessage<'f>>,
 }
 
 #[get("/")]
-pub async fn home(
-    flash: Option<FlashMessage<'_>>,
-) -> Result<Template, Debug<Infallible>> {
-    Ok(Template::render(
-        "home",
-        HomeContext {
-            title: String::from("Home"),
-            flash,
-        },
-    ))
+async fn home<'f>(
+    flash: Option<FlashMessage<'f>>,
+) -> HomeContext<'f> {
+    HomeContext {
+        title: String::from("Home"),
+        flash,
+    }
+}
+
+#[derive(FromForm)]
+struct ForecastForm {
+    locality: String,
+}
+
+#[derive(Template)]
+#[template(path = "forecast.html")]
+struct ForecastContext<'f> {
+    title: String,
+    forecast: OneCall,
+    flash: Option<FlashMessage<'f>>,
+}
+
+#[post("/", data="<form>")]
+async fn forecast<'f>(
+    flash: Option<FlashMessage<'f>>,
+    config: &State<DewpointConfig>,
+    form: Form<ForecastForm>,
+) -> ForecastContext<'f> {
+    let lat = "-26.861";
+    let lon = "152.957";
+
+    let url = format!("https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={exclude}&appid={apikey}",
+    lat=lat, lon=lon, exclude="minutely,hourly,alerts", apikey=config.openweather_api_key);
+    let forecast: OneCall = reqwest::get(url)
+        .await.expect("FIXME")
+        .json()
+        .await.expect("FIXME");
+
+    ForecastContext {
+        title: format!("Forecast for {}", form.locality),
+        forecast,
+        flash,
+    }
 }
 

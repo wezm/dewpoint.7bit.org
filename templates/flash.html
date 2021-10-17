@@ -1,0 +1,13 @@
+{% match flash %}
+  {% when Some with (flash) %}
+    {% if flash.kind() == "error" %}
+    <div class="flash flash-error">{{ flash.message() }}</div>
+    {% else if flash.kind() == "warning" %}
+    <div class="flash flash-warning">{{ flash.message() }}</div>
+    {% else if flash.kind() == "success" %}
+    <div class="flash flash-success">{{ flash.message() }}</div>
+    {% else %}
+    <div class="flash">{{ flash.message() }}</div>
+    {% endif %}
+  {% when None %}
+{% endmatch %}

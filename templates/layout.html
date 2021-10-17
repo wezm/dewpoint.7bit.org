@@ -1,14 +1,10 @@
-{% import "macros" as macros %}
+{% import "macros.html" as macros %}
 
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    {% if title %}
     <title>Dewpoint Forecast - {{ title }}</title>
-    {% else %}
-    <title>Dewpoint Forecast</title>
-    {% endif %}
     <link rel="stylesheet" type="text/css" href="/public/style.css" />
     <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;&gt;&lt;text y=&quot;.9em&quot; font-size=&quot;90&quot;&gt;💧&lt;/text&gt;&lt;/svg&gt;"/>
   </head>
@@ -20,7 +16,7 @@
 
       <main>
         <h2>{{ title }}</h2>
-        {% include "flash" %}
+        {% include "flash.html" %}
         {% block content %}{% endblock content %}
       </main>
 
@@ -34,7 +30,7 @@
           <a href="https://github.com/sponsors/wezm">Support My Work</a>
         </div>
         <div class="copyright">
-          Copyright © {{ macros::copyright_years() }} Wesley Moore —
+          Copyright © {% call macros::copyright_years() %} Wesley Moore —
           <a href="https://github.com/wezm/dewpoint.7bit.org">Website Source on GitHub</a>
         </div>
       </footer>

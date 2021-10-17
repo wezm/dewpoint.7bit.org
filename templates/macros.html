@@ -1,0 +1,10 @@
+{% macro copyright_years() %}
+  {% let start = "2021" %}
+  {# let now = now() | date(format="%Y") #}
+  {% let now = "2021" %}
+  {% if start != now %}
+    {{ start }}&ndash;{{ now }}
+  {% else %}
+    {{ start }}
+  {% endif %}
+{% endmacro %}

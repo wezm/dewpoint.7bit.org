@@ -1,7 +1,0 @@
-{% extends "layout" %}
-{% import "macros" as macros %}
-
-{% block content %}
-
-
-{% endblock content %}
