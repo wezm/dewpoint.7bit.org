@@ -3,9 +3,8 @@ mod home;
 #[macro_use]
 extern crate rocket;
 
-use rocket::fs::FileServer;
-use rocket::{Build, Rocket};
 use rocket::fairing::AdHoc;
+use rocket::fs::FileServer;
 
 use dewpoint::DewpointConfig;
 

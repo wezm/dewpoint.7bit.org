@@ -1,11 +1,13 @@
 use std::fmt::{Display, Formatter};
-use rocket::serde::{Deserialize, Serialize};
+
+use chrono::{DateTime, FixedOffset, TimeZone, Utc};
+use rocket::serde::Deserialize;
 
 // Wrapper types with private fields
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
-pub struct UnixTimestamp(u64);
+pub struct UnixTimestamp(i64);
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
@@ -71,7 +73,7 @@ pub struct Longitude(f32);
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
-pub struct TimezoneOffset(u32);
+pub struct TimezoneOffset(i32);
 
 // Public structs composed of wrapper types
 
@@ -164,6 +166,27 @@ impl Kelvin {
 
     pub fn to_fahrenheit(self) -> Farenheit {
         Farenheit(self.to_celcius().0 * 1.8 + 32.0)
+    }
+}
+
+impl UnixTimestamp {
+    pub fn day_date(self, tz_offset: &TimezoneOffset) -> String {
+        self.in_timezone(*tz_offset)
+            .format("%A, %-d %B")
+            .to_string()
+    }
+
+    pub fn time_12h(self, tz_offset: &TimezoneOffset) -> String {
+        self.in_timezone(*tz_offset).format("%I:%M %p").to_string()
+    }
+
+    fn to_chrono(self) -> DateTime<Utc> {
+        Utc.timestamp(self.0, 0)
+    }
+
+    fn in_timezone(self, tz_offset: TimezoneOffset) -> DateTime<FixedOffset> {
+        self.to_chrono()
+            .with_timezone(&FixedOffset::east(tz_offset.0))
     }
 }
 

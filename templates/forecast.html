@@ -2,23 +2,22 @@
 {% import "macros.html" as macros %}
 
 {% block content %}
-Insert forecast here.
+<em>Note: values are for a hardcoded location at the moment.</em>
 
 <h3>Current Conditions</h3>
 
 🌡️: {{ forecast.current.temp.to_celcius() }} ({{ forecast.current.feels_like.to_celcius() }})<br>
 💧: {{ forecast.current.dew_point.to_celcius() }}<br>
-🌅: {#{{ forecast.current.sunrise }}#}<br>
-🌇: {#{{ forecast.current.sunset }}#}<br>
+🌅: {{ forecast.current.sunrise.time_12h(forecast.timezone_offset) }}<br>
+🌇: {{ forecast.current.sunset.time_12h(forecast.timezone_offset) }}<br>
 UV: {{ forecast.current.uvi }}<br>
 🌫: {{ forecast.current.humidity }}
 
-<h3>Forecast</h3>
+<h3>7 Day Forecast</h3>
 
 {% for day in forecast.daily %}
 <div>
-    {#<h4>{{ day.dt }}</h4>#}
-    <h4>TODO: Day/Date</h4>
+    <h4>{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
   💧: {{ day.dew_point.to_celcius() }}
 </div>
 {% endfor %}
