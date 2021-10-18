@@ -625,8 +625,9 @@ dependencies = [
 
 [[package]]
 name = "ip2location"
-version = "0.1.4"
-source = "git+https://github.com/wezm/rust-ip2location.git?branch=accept-ipaddr#980102a6edf901a8b6a98c6d9171f6bc19054571"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e6224d9b10b2ed5c277dfd970e161b9230f5340370403946d7d6a6113ea107c"
 dependencies = [
  "memmap",
  "serde",

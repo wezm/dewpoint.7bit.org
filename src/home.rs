@@ -4,7 +4,7 @@ use std::sync::Arc;
 use askama::Template;
 use rocket::form::Form;
 use rocket::request::FlashMessage;
-use rocket::{Request, Route, State};
+use rocket::{Route, State};
 
 use dewpoint::weather::OneCall;
 use dewpoint::{Countries, CountryArray, DewpointConfig, Ip2Location};
