@@ -1,9 +1,24 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<p>🚧 <em>Note: location lookup isn't actually implemented yet.</em></p>
+
 <form action="/" method="post">
+  <label>Locality</label>
   <input type="text" name="locality">
-  <input type="submit" name="submit" value="Submit">
+  <select name="country" class="country-select">
+    {% if ip_country == "-" %}
+      <option value="">Select a country</option>
+    {% endif %}
+    {% for country in countries %}
+      {% if country.alpha2 == ip_country %}
+        <option value="{{ country.alpha2 }}" selected>{{ country.long_name }}</option>
+      {% else %}
+        <option value="{{ country.alpha2 }}">{{ country.long_name }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  <input type="submit" name="submit" value="Search">
 </form>
 
 {% endblock content %}

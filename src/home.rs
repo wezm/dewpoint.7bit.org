@@ -1,10 +1,13 @@
+use std::net::IpAddr;
+use std::sync::Arc;
+
 use askama::Template;
 use rocket::form::Form;
 use rocket::request::FlashMessage;
-use rocket::{Route, State};
+use rocket::{Request, Route, State};
 
-use dewpoint::openweather::OneCall;
-use dewpoint::DewpointConfig;
+use dewpoint::weather::OneCall;
+use dewpoint::{Countries, CountryArray, DewpointConfig, Ip2Location};
 
 // These are to make the compiler rebuild when they change
 // TODO: Check that they don't end up in the final binary
@@ -19,13 +22,33 @@ pub fn routes() -> Vec<Route> {
 #[template(path = "home.html")]
 struct HomeContext<'f> {
     title: String,
+    ip_country: String,
+    countries: Arc<CountryArray>,
     flash: Option<FlashMessage<'f>>,
 }
 
 #[get("/")]
-async fn home<'f>(flash: Option<FlashMessage<'f>>) -> HomeContext<'f> {
+async fn home<'f>(
+    client_ip: Option<IpAddr>,
+    flash: Option<FlashMessage<'f>>,
+    geodb: &State<Ip2Location>,
+    countries: &State<Countries>,
+) -> HomeContext<'f> {
+    let ip_country = client_ip
+        .and_then(|ip| {
+            let mut geodb = geodb.0.lock().unwrap();
+            geodb
+                .ip_lookup(ip)
+                .ok()
+                .and_then(|record| record.country)
+                .map(|country| country.short_name)
+        })
+        .unwrap_or_else(|| String::from("-"));
+
     HomeContext {
         title: String::from("Home"),
+        ip_country,
+        countries: Arc::clone(&countries.0),
         flash,
     }
 }

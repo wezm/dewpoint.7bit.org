@@ -1,3 +1,7 @@
+//! OpenWeather OneCall deserialization
+//!
+//! https://openweathermap.org/api/one-call-api
+
 use std::fmt::{Display, Formatter};
 
 use chrono::{DateTime, FixedOffset, TimeZone, Utc};
