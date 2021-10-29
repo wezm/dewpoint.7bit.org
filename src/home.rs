@@ -22,6 +22,7 @@ pub fn routes() -> Vec<Route> {
 #[template(path = "home.html")]
 struct HomeContext<'f> {
     title: String,
+    ip: String,
     ip_country: String,
     countries: Arc<CountryArray>,
     flash: Option<FlashMessage<'f>>,
@@ -47,6 +48,7 @@ async fn home<'f>(
 
     HomeContext {
         title: String::from("Home"),
+        ip: client_ip.map(|ip| ip.to_string()).unwrap_or_else(|| String::from("Unknown")),
         ip_country,
         countries: Arc::clone(&countries.0),
         flash,
