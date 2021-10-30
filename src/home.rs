@@ -119,7 +119,7 @@ struct ForecastContext<'f> {
 
 #[get("/forecast/<country>/<lat>/<lon>/<name>")]
 async fn forecast<'f>(
-    country: String,
+    mut country: String,
     lat: f32,
     lon: f32,
     name: Option<String>,
@@ -127,6 +127,7 @@ async fn forecast<'f>(
     config: &State<DewpointConfig>,
     countries: &State<Countries>,
 ) -> ForecastContext<'f> {
+    country.make_ascii_uppercase();
     // let lat = "-26.861";
     // let lon = "152.957";
     let unit = match country.as_str() {

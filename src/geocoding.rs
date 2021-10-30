@@ -5,22 +5,27 @@
 use rocket::http::uri::Origin;
 use rocket::serde::Deserialize;
 use rocket::uri;
+use std::collections::HashMap;
 
 use crate::country::{country_from_code, Country};
 use crate::home::rocket_uri_macro_forecast;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Location {
     /// Name of the found location
-    pub name: String,
+    name: String,
     /// Geographical coordinates of the found location (latitude)
     pub lat: f32,
     /// Geographical coordinates of the found location (longitude)
     pub lon: f32,
+    /// State
+    state: Option<String>,
     /// Country of the found location
     #[serde(deserialize_with = "country_from_code")]
     pub country: Country,
+    /// Translated names
+    local_names: HashMap<String, String>,
 }
 
 impl Location {
@@ -31,5 +36,18 @@ impl Location {
             self.lon,
             &self.name
         ))
+    }
+
+    pub fn name(&self) -> &str {
+        // TODO: Support passing a language code
+        self.local_names.get("en").unwrap_or(&self.name)
+    }
+
+    pub fn state(&self) -> Option<&str> {
+        self.state.as_deref()
+    }
+
+    pub fn country_name(&self) -> &str {
+        self.country.0.long_name
     }
 }

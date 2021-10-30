@@ -7,7 +7,8 @@ use rocket::form::{self, DataField, FromFormField, ValueField};
 use rocket::serde::de::Visitor;
 use rocket::serde::{de, Deserializer};
 
-pub struct Country(celes::Country);
+#[derive(Debug)]
+pub struct Country(pub(crate) celes::Country);
 
 impl Country {
     pub fn code(&self) -> &str {

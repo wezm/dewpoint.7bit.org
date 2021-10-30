@@ -7,7 +7,14 @@
 
 {% for location in locations %}
 <ul>
-    <li><a href="{{ location.url() }}">{{ location.name }}</a></li>
+    <li><a href="{{ location.url() }}">
+      {% match location.state() %}
+        {% when Some with (state) %}
+          {{ location.name() }}, {{ state }}, {{ location.country_name() }}
+        {% when None %}
+           {{ location.name() }}, {{ location.country_name() }}
+      {% endmatch %}
+    </a></li>
 </ul>
 {% endfor %}
 
