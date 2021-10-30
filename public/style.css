@@ -15,8 +15,16 @@ h1 a {
     color: black;
 }
 
+main {
+    overflow: auto;
+    max-width: 1070px;
+    margin: 0 auto;
+}
+
 footer {
+    margin-top: 2em;
     font-size: smaller;
+    clear: both;
 }
 
 .text-center {
@@ -46,6 +54,39 @@ footer {
     max-width: 150px;
 }
 
+.sym {
+    margin-right: 0.5em;
+    text-align: center;
+}
+.conditions {
+    line-height: 2;
+}
+.conditions dt {
+    font-weight: 550;
+    float: left;
+}
+.conditions dd {
+    margin-left: 11em;
+}
+.conditions-narrow dd {
+    margin-left: 8.5em;
+}
+.conditions-current {
+    margin-left: 0.5em;
+}
+.forecast-card {
+    float: left;
+    box-sizing: border-box;
+    width: 250px;
+    border: 1px solid hsl(194.7, 60.3%, 90%);
+    border-radius: 0.5em;
+    margin: 0.5em 0.5em 1em;
+    padding: 1em;
+}
+.forecast-card h4 {
+    margin-top: 0;
+}
+
 .socials {
     margin-top: 2em;
     line-height: 1.5;
@@ -62,4 +103,11 @@ footer {
 
 .copyright {
     margin-top: 1em;
+}
+
+@media all and (max-width: 400px) {
+    .forecast-card {
+        float: none;
+        width: auto;
+    }
 }

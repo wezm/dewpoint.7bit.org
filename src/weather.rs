@@ -207,6 +207,21 @@ impl DailyForecast {
             TemperatureUnit::Fahrenheit => self.dew_point.to_fahrenheit().to_string(),
         }
     }
+
+    pub fn max(&self, unit: &TemperatureUnit) -> String {
+        match unit {
+            TemperatureUnit::Celsius => self.temp.max.to_celcius().to_string(),
+            TemperatureUnit::Fahrenheit => self.temp.max.to_fahrenheit().to_string(),
+        }
+    }
+
+    pub fn sunrise(&self, timezone_offset: &TimezoneOffset) -> String {
+        self.sunrise.time_12h(timezone_offset)
+    }
+
+    pub fn sunset(&self, timezone_offset: &TimezoneOffset) -> String {
+        self.sunset.time_12h(timezone_offset)
+    }
 }
 
 impl Kelvin {

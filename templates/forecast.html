@@ -4,19 +4,29 @@
 {% block content %}
 <h3>Current Conditions</h3>
 
-🌡️: {{ forecast.current_temp(unit) }} ({{ forecast.feels_like(unit) }})<br>
-💧: {{ forecast.dew_point(unit) }}<br>
-🌅: {{ forecast.sunrise() }}<br>
-🌇: {{ forecast.sunset() }}<br>
-UV: {{ forecast.current.uvi }}<br>
-🌫: {{ forecast.current.humidity }}
+<dl class="conditions conditions-current">
+    <dt><span class="sym">🌡️</span> Temperature</dt><dd>{{ forecast.current_temp(unit) }} ({{ forecast.feels_like(unit) }})</dd>
+    <dt><span class="sym">💧</span> Dew Point</dt><dd>{{ forecast.dew_point(unit) }}</dd>
+    <dt><span class="sym">🌅</span> Sunrise</dt><dd>{{ forecast.sunrise() }}</dd>
+    <dt><span class="sym">🌇</span> Sunset</dt><dd>{{ forecast.sunset() }}</dd>
+    <dt><span class="sym">🟣</span> UV Index</dt><dd>{{ forecast.current.uvi }}</dd>
+    <dt><span class="sym">🌫</span> Relative Humidity</dt><dd>{{ forecast.current.humidity }}</dd>
+</dl>
 
-<h3>7 Day Forecast</h3>
+
+<h3>Forecast</h3>
 
 {% for day in forecast.daily %}
-<div>
-    <h4>{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
-  💧: {{ day.dew_point(unit) }}
+<div class="forecast-card">
+    <h4 class="text-center">{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
+
+    <dl class="conditions conditions-narrow">
+        <dt><span class="sym">💧</span> Dew Point</dt><dd>{{ day.dew_point(unit) }}</dd>
+        <dt><span class="sym">🌡️</span> Maximum</dt><dd>{{ day.max(unit) }}</dd>
+        <dt><span class="sym">🌅</span> Sunrise</dt><dd>{{ day.sunrise(forecast.timezone_offset) }}</dd>
+        <dt><span class="sym">🌇</span> Sunset</dt><dd>{{ day.sunset(forecast.timezone_offset) }}</dd>
+        <dt><span class="sym">🌫</span> Humidity</dt><dd>{{ day.humidity }}</dd>
+    </dl>
 </div>
 {% endfor %}
 
