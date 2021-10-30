@@ -2,11 +2,12 @@ use std::net::IpAddr;
 use std::sync::Arc;
 
 use askama::Template;
+use celes::Country;
 use rocket::form::Form;
 use rocket::request::FlashMessage;
 use rocket::{Route, State};
 
-use dewpoint::weather::OneCall;
+use dewpoint::weather::{OneCall, TemperatureUnit};
 use dewpoint::{Countries, CountryArray, DewpointConfig, Ip2Location};
 
 // These are to make the compiler rebuild when they change
@@ -48,7 +49,9 @@ async fn home<'f>(
 
     HomeContext {
         title: String::from("Home"),
-        ip: client_ip.map(|ip| ip.to_string()).unwrap_or_else(|| String::from("Unknown")),
+        ip: client_ip
+            .map(|ip| ip.to_string())
+            .unwrap_or_else(|| String::from("Unknown")),
         ip_country,
         countries: Arc::clone(&countries.0),
         flash,
@@ -58,6 +61,10 @@ async fn home<'f>(
 #[derive(FromForm)]
 struct ForecastForm {
     locality: String,
+    /// ISO 3166-1 alpha-2
+    ///
+    /// https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    country: String,
 }
 
 #[derive(Template)]
@@ -65,6 +72,7 @@ struct ForecastForm {
 struct ForecastContext<'f> {
     title: String,
     forecast: OneCall,
+    unit: TemperatureUnit,
     flash: Option<FlashMessage<'f>>,
 }
 
@@ -73,9 +81,22 @@ async fn forecast<'f>(
     flash: Option<FlashMessage<'f>>,
     config: &State<DewpointConfig>,
     form: Form<ForecastForm>,
+    countries: &State<Countries>,
 ) -> ForecastContext<'f> {
     let lat = "-26.861";
     let lon = "152.957";
+    let unit = match form.country.as_str() {
+        // list from https://worldpopulationreview.com/country-rankings/countries-that-use-fahrenheit
+        | "BS" // Bahamas
+        | "FM" // Micronesia (Federated States of)
+        | "KY" // Cayman Islands
+        | "LR" // Liberia
+        | "MH" // Marshall Islands
+        | "PW" // Palau
+        | "US" // United States
+        => TemperatureUnit::Fahrenheit,
+        _ => TemperatureUnit::Celsius,
+    };
 
     let url = format!("https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={exclude}&appid={apikey}",
     lat=lat, lon=lon, exclude="minutely,hourly,alerts", apikey=config.openweather_api_key);
@@ -89,6 +110,7 @@ async fn forecast<'f>(
     ForecastContext {
         title: format!("Forecast for {}", form.locality),
         forecast,
+        unit,
         flash,
     }
 }

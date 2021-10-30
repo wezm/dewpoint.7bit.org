@@ -6,10 +6,10 @@
 
 <h3>Current Conditions</h3>
 
-🌡️: {{ forecast.current.temp.to_celcius() }} ({{ forecast.current.feels_like.to_celcius() }})<br>
-💧: {{ forecast.current.dew_point.to_celcius() }}<br>
-🌅: {{ forecast.current.sunrise.time_12h(forecast.timezone_offset) }}<br>
-🌇: {{ forecast.current.sunset.time_12h(forecast.timezone_offset) }}<br>
+🌡️: {{ forecast.current_temp(unit) }} ({{ forecast.feels_like(unit) }})<br>
+💧: {{ forecast.dew_point(unit) }}<br>
+🌅: {{ forecast.sunrise() }}<br>
+🌇: {{ forecast.sunset() }}<br>
 UV: {{ forecast.current.uvi }}<br>
 🌫: {{ forecast.current.humidity }}
 
@@ -18,7 +18,7 @@ UV: {{ forecast.current.uvi }}<br>
 {% for day in forecast.daily %}
 <div>
     <h4>{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
-  💧: {{ day.dew_point.to_celcius() }}
+  💧: {{ day.dew_point(unit) }}
 </div>
 {% endfor %}
 

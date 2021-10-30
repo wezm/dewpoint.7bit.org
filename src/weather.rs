@@ -19,11 +19,11 @@ pub struct Kelvin(f32);
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
-pub struct Celcius(f32);
+pub struct Celsius(f32);
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
-pub struct Farenheit(f32);
+pub struct Fahrenheit(f32);
 
 #[derive(Deserialize, Copy, Clone)]
 #[serde(crate = "rocket::serde")]
@@ -163,13 +163,59 @@ pub struct FeelsLike {
     pub morn: Kelvin,
 }
 
-impl Kelvin {
-    pub fn to_celcius(self) -> Celcius {
-        Celcius(self.0 - 273.15)
+#[derive(Copy, Clone, Debug)]
+pub enum TemperatureUnit {
+    Celsius,
+    Fahrenheit,
+}
+
+impl OneCall {
+    pub fn sunrise(&self) -> String {
+        self.current.sunrise.time_12h(&self.timezone_offset)
     }
 
-    pub fn to_fahrenheit(self) -> Farenheit {
-        Farenheit(self.to_celcius().0 * 1.8 + 32.0)
+    pub fn sunset(&self) -> String {
+        self.current.sunset.time_12h(&self.timezone_offset)
+    }
+
+    pub fn current_temp(&self, unit: &TemperatureUnit) -> String {
+        match unit {
+            TemperatureUnit::Celsius => self.current.temp.to_celcius().to_string(),
+            TemperatureUnit::Fahrenheit => self.current.temp.to_fahrenheit().to_string(),
+        }
+    }
+
+    pub fn feels_like(&self, unit: &TemperatureUnit) -> String {
+        match unit {
+            TemperatureUnit::Celsius => self.current.feels_like.to_celcius().to_string(),
+            TemperatureUnit::Fahrenheit => self.current.feels_like.to_fahrenheit().to_string(),
+        }
+    }
+
+    pub fn dew_point(&self, unit: &TemperatureUnit) -> String {
+        match unit {
+            TemperatureUnit::Celsius => self.current.dew_point.to_celcius().to_string(),
+            TemperatureUnit::Fahrenheit => self.current.dew_point.to_fahrenheit().to_string(),
+        }
+    }
+}
+
+impl DailyForecast {
+    pub fn dew_point(&self, unit: &TemperatureUnit) -> String {
+        match unit {
+            TemperatureUnit::Celsius => self.dew_point.to_celcius().to_string(),
+            TemperatureUnit::Fahrenheit => self.dew_point.to_fahrenheit().to_string(),
+        }
+    }
+}
+
+impl Kelvin {
+    pub fn to_celcius(self) -> Celsius {
+        Celsius(self.0 - 273.15)
+    }
+
+    pub fn to_fahrenheit(self) -> Fahrenheit {
+        Fahrenheit(self.to_celcius().0 * 1.8 + 32.0)
     }
 }
 
@@ -194,9 +240,15 @@ impl UnixTimestamp {
     }
 }
 
-impl Display for Celcius {
+impl Display for Celsius {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:.1}°C", self.0)
+    }
+}
+
+impl Display for Fahrenheit {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:.1}°F", self.0)
     }
 }
 
