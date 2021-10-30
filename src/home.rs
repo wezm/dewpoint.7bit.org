@@ -17,7 +17,7 @@ const _HOME: &[u8] = include_bytes!("../templates/home.html");
 const _FORECAST: &[u8] = include_bytes!("../templates/forecast.html");
 
 pub fn routes() -> Vec<Route> {
-    routes![home, acknowledgements, location, forecast]
+    routes![home, acknowledgements, location, forecast, robots]
 }
 
 #[derive(Template)]
@@ -30,7 +30,7 @@ struct HomeContext<'f> {
 }
 
 #[get("/")]
-async fn home<'f>(
+fn home<'f>(
     client_ip: Option<IpAddr>,
     flash: Option<FlashMessage<'f>>,
     geodb: &State<Ip2Location>,
@@ -63,7 +63,7 @@ struct AcknowledgementsContext<'f> {
 }
 
 #[get("/acknowledgements")]
-async fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowledgementsContext<'f> {
+fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowledgementsContext<'f> {
     AcknowledgementsContext {
         title: String::from("Acknowledgements"),
         flash,
@@ -176,6 +176,11 @@ async fn forecast<'f>(
         unit,
         flash,
     }
+}
+
+#[get("/robots.txt")]
+fn robots() -> &'static str {
+    "User-agent: *\nDisallow: /"
 }
 
 mod filters {
