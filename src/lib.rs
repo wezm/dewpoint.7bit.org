@@ -1,5 +1,10 @@
+#[macro_use]
+extern crate rocket;
+
 mod config;
+pub mod country;
 pub mod geocoding;
+pub mod home;
 pub mod weather;
 
 use celes::Country;

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% import "macros.html" as macros %}
+
+{% block content %}
+
+<h3>Locations</h3>
+
+{% for location in locations %}
+<ul>
+    <li><a href="{{ location.url() }}">{{ location.name }}</a></li>
+</ul>
+{% endfor %}
+
+{% endblock content %}

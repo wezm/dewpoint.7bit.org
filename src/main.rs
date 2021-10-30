@@ -1,5 +1,3 @@
-mod home;
-
 #[macro_use]
 extern crate rocket;
 
@@ -7,6 +5,7 @@ use ip2location::DB as GeoDB;
 use rocket::fairing::AdHoc;
 use rocket::fs::FileServer;
 
+use dewpoint::home;
 use dewpoint::{Countries, DewpointConfig, Ip2Location};
 
 #[launch]
