@@ -17,7 +17,7 @@ const _HOME: &[u8] = include_bytes!("../templates/home.html");
 const _FORECAST: &[u8] = include_bytes!("../templates/forecast.html");
 
 pub fn routes() -> Vec<Route> {
-    routes![home, acknowledgements, location, forecast, robots]
+    routes![home, about, acknowledgements, location, forecast, robots]
 }
 
 #[derive(Template)]
@@ -57,15 +57,30 @@ fn home<'f>(
 
 #[derive(Template)]
 #[template(path = "acknowledgements.html")]
-struct AcknowledgementsContext<'f> {
+struct AcknowlegementsContext<'f> {
     title: String,
     flash: Option<FlashMessage<'f>>,
 }
 
 #[get("/acknowledgements")]
-fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowledgementsContext<'f> {
-    AcknowledgementsContext {
+fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowlegementsContext<'f> {
+    AcknowlegementsContext {
         title: String::from("Acknowledgements"),
+        flash,
+    }
+}
+
+#[derive(Template)]
+#[template(path = "about.html")]
+struct AboutContext<'f> {
+    title: String,
+    flash: Option<FlashMessage<'f>>,
+}
+
+#[get("/about")]
+fn about<'f>(flash: Option<FlashMessage<'f>>) -> AboutContext<'f> {
+    AboutContext {
+        title: String::from("About"),
         flash,
     }
 }
@@ -184,6 +199,7 @@ fn robots() -> &'static str {
 }
 
 mod filters {
+    use super::rocket_uri_macro_about;
     use super::rocket_uri_macro_acknowledgements;
     use std::{env, fmt};
 
@@ -193,6 +209,7 @@ mod filters {
 
     pub fn url(name: &str) -> ::askama::Result<String> {
         match name {
+            "about" => Ok(uri!(about()).to_string()),
             "acknowledgements" => Ok(uri!(acknowledgements()).to_string()),
             _ => Err(askama::Error::Fmt(fmt::Error)),
         }

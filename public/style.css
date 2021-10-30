@@ -5,21 +5,18 @@
     font-weight: 200 800;
 }
 
-/*html, body {*/
-/*    box-sizing: border-box;*/
-/*    margin: 0;*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*}*/
-
 body {
-    font-family: Muli, "Nunito", "Manrope VF", sans-serif;
+    font-family: "Manrope VF", sans-serif;
     padding: 0.5em;
 }
 
 h1 a {
     text-decoration: none;
     color: black;
+}
+
+footer {
+    font-size: smaller;
 }
 
 .text-center {
@@ -50,7 +47,8 @@ h1 a {
 }
 
 .socials {
-    margin-top:2em
+    margin-top: 2em;
+    line-height: 1.5;
 }
 .socials a {
     text-transform:uppercase;

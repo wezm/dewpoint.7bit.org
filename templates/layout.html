@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dewpoint Forecast - {{ title }}</title>
     <link rel="stylesheet" type="text/css" href="/public/style.css" />
     <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;&gt;&lt;text y=&quot;.9em&quot; font-size=&quot;90&quot;&gt;💧&lt;/text&gt;&lt;/svg&gt;"/>
@@ -22,7 +23,7 @@
 
       <footer class="text-center">
         <div class="socials">
-          <a href="https://www.wezm.net/v2/about/">About</a>
+          <a href="{{ "about"|url }}">About</a>
           <a href="{{ "acknowledgements"|url }}">Acknowledgements</a>
           •
           <a href="https://twitter.com/wezm">Twitter</a>
@@ -32,7 +33,7 @@
         </div>
         <div class="copyright">
           Copyright © {% call macros::copyright_years() %} Wesley Moore —
-          <a href="https://github.com/wezm/dewpoint.7bit.org">Website Source on GitHub</a>
+          <a href="https://github.com/wezm/dewpoint.7bit.org">Report issues, view code on GitHub</a>
           ({{ ""|git_revision }})
         </div>
       </footer>
