@@ -17,7 +17,7 @@ const _HOME: &[u8] = include_bytes!("../templates/home.html");
 const _FORECAST: &[u8] = include_bytes!("../templates/forecast.html");
 
 pub fn routes() -> Vec<Route> {
-    routes![home, location, forecast]
+    routes![home, acknowledgements, location, forecast]
 }
 
 #[derive(Template)]
@@ -51,6 +51,21 @@ async fn home<'f>(
         title: String::from("Home"),
         ip_country,
         countries: Arc::clone(&countries.0),
+        flash,
+    }
+}
+
+#[derive(Template)]
+#[template(path = "acknowledgements.html")]
+struct AcknowledgementsContext<'f> {
+    title: String,
+    flash: Option<FlashMessage<'f>>,
+}
+
+#[get("/acknowledgements")]
+async fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowledgementsContext<'f> {
+    AcknowledgementsContext {
+        title: String::from("Acknowledgements"),
         flash,
     }
 }
@@ -164,9 +179,17 @@ async fn forecast<'f>(
 }
 
 mod filters {
-    use std::env;
+    use super::rocket_uri_macro_acknowledgements;
+    use std::{env, fmt};
 
     pub fn git_revision(_: &str) -> ::askama::Result<String> {
         Ok(env::var("DEWPOINT_REVISION").unwrap_or_else(|_| String::from("dev")))
+    }
+
+    pub fn url(name: &str) -> ::askama::Result<String> {
+        match name {
+            "acknowledgements" => Ok(uri!(acknowledgements()).to_string()),
+            _ => Err(askama::Error::Fmt(fmt::Error)),
+        }
     }
 }
