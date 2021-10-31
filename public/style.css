@@ -106,6 +106,10 @@ footer {
 }
 
 @media all and (max-width: 400px) {
+    h1 {
+        /* Responsive full-width font size */
+        font-size: clamp(100%, 1rem + 10vw, 30px);
+    }
     .forecast-card {
         float: none;
         width: auto;

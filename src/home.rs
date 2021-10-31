@@ -111,7 +111,7 @@ async fn location<'f>(
 ) -> LocationContext<'f> {
     let url = format!(
         "http://api.openweathermap.org/geo/1.0/direct?q={city},{country}&limit=3&appid={apikey}",
-        city = form.locality,
+        city = form.locality.trim(),
         country = form.country.code(),
         apikey = config.openweather_api_key
     );
@@ -199,6 +199,7 @@ fn robots() -> &'static str {
 }
 
 mod filters {
+    use super::rocket_uri_macro_home;
     use super::rocket_uri_macro_about;
     use super::rocket_uri_macro_acknowledgements;
     use std::{env, fmt};
@@ -209,6 +210,7 @@ mod filters {
 
     pub fn url(name: &str) -> ::askama::Result<String> {
         match name {
+            "home" => Ok(uri!(home()).to_string()),
             "about" => Ok(uri!(about()).to_string()),
             "acknowledgements" => Ok(uri!(acknowledgements()).to_string()),
             _ => Err(askama::Error::Fmt(fmt::Error)),
