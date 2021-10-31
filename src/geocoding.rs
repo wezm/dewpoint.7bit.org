@@ -40,8 +40,7 @@ impl Location {
     }
 
     pub fn name(&self) -> &str {
-        // TODO: Support passing a language code
-        self.local_names.get("en").unwrap_or(&self.name)
+        &self.name
     }
 
     pub fn state(&self) -> Option<&str> {

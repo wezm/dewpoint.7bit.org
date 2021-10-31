@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="text-center">
 <p>Search for a location to view the forecast.</p>
 <form action="/" method="post">
   <label>Locality</label>
@@ -19,5 +20,5 @@
   </select>
   <input type="submit" name="submit" value="Search">
 </form>
-
+</div>
 {% endblock content %}
