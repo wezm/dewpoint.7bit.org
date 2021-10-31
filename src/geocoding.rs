@@ -25,6 +25,7 @@ pub struct Location {
     #[serde(deserialize_with = "country_from_code")]
     pub country: Country,
     /// Translated names
+    #[serde(default)]
     local_names: HashMap<String, String>,
 }
 
