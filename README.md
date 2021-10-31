@@ -54,6 +54,16 @@ Fast auto-rebuilding server:
 * [watchexec](https://github.com/watchexec/watchexec) watches the file-system and runs a command when changes are detected 
 * [mold](https://github.com/rui314/mold) is a fast linker for Linux.
 
+Licence
+-------
+
+This project is dual licenced under either of:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](https://github.com/wezm/Quotes/blob/master/LICENSE-APACHE))
+- MIT license ([LICENSE-MIT](https://github.com/wezm/Quotes/blob/master/LICENSE-MIT))
+
+at your option.
+
 [Rust]: https://www.rust-lang.org/
 [Rocket]: https://rocket.rs/
 [rocket-config]: https://rocket.rs/v0.5-rc/guide/configuration/#configuration
