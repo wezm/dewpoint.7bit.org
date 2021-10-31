@@ -1,5 +1,5 @@
-💧 Dew Point Forecast
-=====================
+Dew Point Forecast
+==================
 
 [![Build Status](https://api.cirrus-ci.com/github/wezm/dewpoint.7bit.org.svg)](https://cirrus-ci.com/github/wezm/dewpoint.7bit.org)
 
