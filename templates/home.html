@@ -10,10 +10,10 @@
       <option value="">Select a country</option>
     {% endif %}
     {% for country in countries %}
-      {% if country.alpha2 == ip_country %}
-        <option value="{{ country.alpha2 }}" selected>{{ country.long_name }}</option>
+      {% if country.1.alpha2 == ip_country %}
+        <option value="{{ country.1.alpha2 }}" selected>{{ country.0 }}</option>
       {% else %}
-        <option value="{{ country.alpha2 }}">{{ country.long_name }}</option>
+        <option value="{{ country.1.alpha2 }}">{{ country.0 }}</option>
       {% endif %}
     {% endfor %}
   </select>
