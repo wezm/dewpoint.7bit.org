@@ -182,7 +182,7 @@ async fn forecast<'f>(
 
 #[get("/robots.txt")]
 fn robots() -> &'static str {
-    "User-agent: *\nDisallow: /"
+    "User-agent: *\nDisallow: /forecast/"
 }
 
 mod filters {
