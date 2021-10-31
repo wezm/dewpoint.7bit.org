@@ -45,7 +45,7 @@ pub struct Metres(f32);
 #[serde(crate = "rocket::serde")]
 pub struct MetresPerSecond(f32);
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct Icon(String);
 
@@ -81,7 +81,7 @@ pub struct TimezoneOffset(i32);
 
 // Public structs composed of wrapper types
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct OneCall {
     pub lat: Latitude,
@@ -92,7 +92,7 @@ pub struct OneCall {
     pub daily: Vec<DailyForecast>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct CurrentWeather {
     pub dt: UnixTimestamp,
@@ -111,7 +111,7 @@ pub struct CurrentWeather {
     pub weather: Vec<Condition>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct Condition {
     pub id: WeatherConditionId,
@@ -120,7 +120,7 @@ pub struct Condition {
     pub icon: Icon,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct DailyForecast {
     pub dt: UnixTimestamp,
@@ -143,7 +143,7 @@ pub struct DailyForecast {
     pub uvi: UVIndex,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct DayTemp {
     pub day: Kelvin,
@@ -154,7 +154,7 @@ pub struct DayTemp {
     pub morn: Kelvin,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct FeelsLike {
     pub day: Kelvin,
@@ -245,7 +245,7 @@ impl UnixTimestamp {
         self.in_timezone(*tz_offset).format("%I:%M %p").to_string()
     }
 
-    fn to_chrono(self) -> DateTime<Utc> {
+    pub fn to_chrono(self) -> DateTime<Utc> {
         Utc.timestamp(self.0, 0)
     }
 

@@ -9,7 +9,7 @@ use rocket::{Route, State};
 use crate::country::Country;
 use crate::geocoding::Location;
 use crate::weather::{OneCall, TemperatureUnit};
-use crate::{Countries, CountryArray, DewpointConfig, Ip2Location};
+use crate::{Countries, CountryArray, DewpointConfig, Ip2Location, WeatherCache};
 
 // These are to make the compiler rebuild when they change
 // TODO: Check that they don't end up in the final binary
@@ -30,22 +30,23 @@ struct HomeContext<'f> {
 }
 
 #[get("/")]
-fn home<'f>(
+async fn home<'f>(
     client_ip: Option<IpAddr>,
     flash: Option<FlashMessage<'f>>,
     geodb: &State<Ip2Location>,
     countries: &State<Countries>,
 ) -> HomeContext<'f> {
-    let ip_country = client_ip
-        .and_then(|ip| {
-            let mut geodb = geodb.0.lock().unwrap();
-            geodb
-                .ip_lookup(ip)
-                .ok()
-                .and_then(|record| record.country)
-                .map(|country| country.short_name)
-        })
-        .unwrap_or_else(|| String::from("-"));
+    let ip_country = if let Some(ip) = client_ip {
+        let mut geodb = geodb.0.lock().await;
+        geodb
+            .ip_lookup(ip)
+            .ok()
+            .and_then(|record| record.country)
+            .map(|country| country.short_name)
+    } else {
+        None
+    }
+    .unwrap_or_else(|| String::from("-"));
 
     HomeContext {
         title: String::from("Home"),
@@ -107,7 +108,6 @@ async fn location<'f>(
     flash: Option<FlashMessage<'f>>,
     config: &State<DewpointConfig>,
     form: Form<LocationForm>,
-    countries: &State<Countries>,
 ) -> LocationContext<'f> {
     let url = format!(
         "http://api.openweathermap.org/geo/1.0/direct?q={city},{country}&limit=3&appid={apikey}",
@@ -129,15 +129,6 @@ async fn location<'f>(
     }
 }
 
-#[derive(FromForm)]
-struct ForecastForm {
-    locality: String,
-    /// ISO 3166-1 alpha-2
-    ///
-    /// https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-    country: String,
-}
-
 #[derive(Template)]
 #[template(path = "forecast.html")]
 struct ForecastContext<'f> {
@@ -155,11 +146,9 @@ async fn forecast<'f>(
     name: Option<String>,
     flash: Option<FlashMessage<'f>>,
     config: &State<DewpointConfig>,
-    countries: &State<Countries>,
+    weather_cache: &State<WeatherCache>,
 ) -> ForecastContext<'f> {
     country.make_ascii_uppercase();
-    // let lat = "-26.861";
-    // let lon = "152.957";
     let unit = match country.as_str() {
         // list from https://worldpopulationreview.com/country-rankings/countries-that-use-fahrenheit
         | "BS" // Bahamas
@@ -175,12 +164,10 @@ async fn forecast<'f>(
 
     let url = format!("https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={exclude}&appid={apikey}",
     lat=lat, lon=lon, exclude="minutely,hourly,alerts", apikey=config.openweather_api_key);
-    let forecast: OneCall = reqwest::get(url)
+    let forecast = weather_cache
+        .get_or_fetch(url)
         .await
-        .expect("FIXME")
-        .json()
-        .await
-        .expect("FIXME");
+        .expect("FIXME weather error");
 
     ForecastContext {
         title: format!(
@@ -199,9 +186,9 @@ fn robots() -> &'static str {
 }
 
 mod filters {
-    use super::rocket_uri_macro_home;
     use super::rocket_uri_macro_about;
     use super::rocket_uri_macro_acknowledgements;
+    use super::rocket_uri_macro_home;
     use std::{env, fmt};
 
     pub fn git_revision(_: &str) -> ::askama::Result<String> {
