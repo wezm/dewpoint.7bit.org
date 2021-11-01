@@ -1,6 +1,6 @@
 //! OpenWeather Geo-coding API
 //!
-//! https://openweathermap.org/api/geocoding-api
+//! <https://openweathermap.org/api/geocoding-api>
 
 use rocket::http::uri::Origin;
 use rocket::serde::Deserialize;
