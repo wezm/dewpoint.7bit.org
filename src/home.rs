@@ -82,7 +82,9 @@ struct AboutContext<'f> {
 
 #[get("/about")]
 fn about<'f>(flash: Option<FlashMessage<'f>>) -> AboutContext<'f> {
+    // Try cgroups v2 path then v1 if that fails
     let memory = fs::read_to_string("/sys/fs/cgroup/memory.current")
+        .or_else(|_err| fs::read_to_string("/sys/fs/cgroup/memory/memory.usage_in_bytes"))
         .ok()
         .and_then(|usage| usage.trim().parse::<usize>().ok())
         .map(|size| size as f32 / 1024. / 1024.);
