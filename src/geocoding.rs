@@ -2,10 +2,11 @@
 //!
 //! <https://openweathermap.org/api/geocoding-api>
 
+use std::collections::HashMap;
+
 use rocket::http::uri::Origin;
 use rocket::serde::Deserialize;
 use rocket::uri;
-use std::collections::HashMap;
 
 use crate::country::{country_from_code, Country};
 use crate::home::rocket_uri_macro_forecast;

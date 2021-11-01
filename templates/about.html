@@ -3,17 +3,33 @@
 
 {% block content %}
 <p>This website presents current weather conditions and a 7-day dew point forecast.</p>
-<p>It was built by <a href="https://www.wezm.net/">Wesley Moore</a> with inspiration from
-    <a href="https://dewpoint.xyz/">https://dewpoint.xyz/</a>.</p>
-<p>The application is open source.
-    The <a href="https://github.com/wezm/dewpoint.7bit.org">code is published on GitHub</a>.</p>
 
 <h3>Dew Point</h3>
 
-<p>The dew point is the temperature at which dew will form as air is cooled.
-  It's a better measure than humidity for how humid it feels as the value does
-  not vary with the air temperature the way the relative humidity percentage
-  does. A higher dew point indicates more moisture in the air and therefore
-  more humid conditions.
-  <a href="https://en.wikipedia.org/wiki/Dew_point">Read more on Wikipedia</a></p>
+<p>
+    The dew point is the temperature at which dew will form as air is cooled.
+    It's a better measure than humidity for how humid it feels as the value does
+    not vary with the air temperature the way the relative humidity percentage
+    does. A higher dew point indicates more moisture in the air and therefore
+    more humid conditions.
+    <a href="https://en.wikipedia.org/wiki/Dew_point">Read more on Wikipedia</a>
+</p>
+
+<h3>Author and Technology</h3>
+
+<p>
+  It was built by <a href="https://www.wezm.net/">Wesley Moore</a> with
+  inspiration from <a href="https://dewpoint.xyz/">dewpoint.xyz</a>.
+  The application is implemented in
+  <a href="https://www.rust-lang.org/">Rust</a> using the
+  <a href="https://rocket.rs/">Rocket web-framework</a>. The
+  <a href="https://github.com/wezm/dewpoint.7bit.org">code is published on GitHub</a>.
+</p>
+
+{% match memory %}
+  {% when Some with (mem_use) %}
+    <p><b>Container Memory Usage:</b> {{ "{:.1}"|format(mem_use) }} MiB</p>
+  {% when None %}
+{% endmatch %}
+
 {% endblock content %}

@@ -1,3 +1,4 @@
+use std::fs;
 use std::net::IpAddr;
 use std::sync::Arc;
 
@@ -76,13 +77,20 @@ fn acknowledgements<'f>(flash: Option<FlashMessage<'f>>) -> AcknowlegementsConte
 struct AboutContext<'f> {
     title: String,
     flash: Option<FlashMessage<'f>>,
+    memory: Option<f32>,
 }
 
 #[get("/about")]
 fn about<'f>(flash: Option<FlashMessage<'f>>) -> AboutContext<'f> {
+    let memory = fs::read_to_string("/sys/fs/cgroup/memory.current")
+        .ok()
+        .and_then(|usage| usage.trim().parse::<usize>().ok())
+        .map(|size| size as f32 / 1024. / 1024.);
+
     AboutContext {
         title: String::from("About"),
         flash,
+        memory,
     }
 }
 
