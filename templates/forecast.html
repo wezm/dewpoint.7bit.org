@@ -16,24 +16,26 @@
 
 <h3>Forecast</h3>
 
-{% for day in forecast.daily %}
-<div class="forecast-card">
-    <h4 class="text-center">{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
+<div class="forecast">
+  {% for day in forecast.daily %}
+  <div class="forecast-card">
+      <h4 class="text-center">{{ day.dt.day_date(forecast.timezone_offset) }}</h4>
 
-    <dl class="conditions conditions-narrow">
-        <dt><span class="sym">💧</span> Dew Point</dt><dd>{{ day.dew_point(unit) }}</dd>
-        <dt><span class="sym">🌡️</span> Maximum</dt><dd>{{ day.max(unit) }}</dd>
-        <dt><span class="sym">🌅</span> Sunrise</dt><dd>{{ day.sunrise(forecast.timezone_offset) }}</dd>
-        <dt><span class="sym">🌇</span> Sunset</dt><dd>{{ day.sunset(forecast.timezone_offset) }}</dd>
-        <dt><span class="sym">🌫</span> Humidity</dt><dd>{{ day.humidity }}</dd>
-        <dt><span class="sym">☁️</span> Clouds</dt><dd>{{ day.clouds }}</dd>
-        {% match day.precipitation() %}
-            {% when Some with (precipitation) %}
-            <dt><span class="sym">{{ precipitation.emoji() }}️</span> {{ precipitation.name() }}</dt><dd>{{ precipitation.volume() }} {{ precipitation.probability() }}</dd>
-            {% when None %}
-        {% endmatch %}
-    </dl>
+      <dl class="conditions conditions-narrow">
+          <dt><span class="sym">💧</span> Dew Point</dt><dd>{{ day.dew_point(unit) }}</dd>
+          <dt><span class="sym">🌡️</span> Maximum</dt><dd>{{ day.max(unit) }}</dd>
+          <dt><span class="sym">🌅</span> Sunrise</dt><dd>{{ day.sunrise(forecast.timezone_offset) }}</dd>
+          <dt><span class="sym">🌇</span> Sunset</dt><dd>{{ day.sunset(forecast.timezone_offset) }}</dd>
+          <dt><span class="sym">🌫</span> Humidity</dt><dd>{{ day.humidity }}</dd>
+          <dt><span class="sym">☁️</span> Clouds</dt><dd>{{ day.clouds }}</dd>
+          {% match day.precipitation() %}
+              {% when Some with (precipitation) %}
+              <dt><span class="sym">{{ precipitation.emoji() }}️</span> {{ precipitation.name() }}</dt><dd>{{ precipitation.volume() }} {{ precipitation.probability() }}</dd>
+              {% when None %}
+          {% endmatch %}
+      </dl>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 
 {% endblock content %}
