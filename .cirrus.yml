@@ -1,7 +1,7 @@
 task:
   name: Build (Alpine Linux)
   container:
-    image: alpine:3.14
+    image: alpine:3.15
     cpu: 8
   environment:
     PATH: "$HOME/.cargo/bin:$PATH"
