@@ -79,6 +79,10 @@ pub struct Longitude(f32);
 #[serde(crate = "rocket::serde")]
 pub struct TimezoneOffset(i32);
 
+#[derive(Deserialize, Copy, Clone)]
+#[serde(crate = "rocket::serde")]
+pub struct Millimetres(f32);
+
 // Public structs composed of wrapper types
 
 #[derive(Deserialize, Clone)]
@@ -139,8 +143,10 @@ pub struct DailyForecast {
     pub wind_gust: MetresPerSecond,
     pub weather: Vec<Condition>,
     pub clouds: Percent,
-    pub pop: Probability, // probability of precipitation
     pub uvi: UVIndex,
+    pub pop: Probability, // probability of precipitation
+    pub rain: Option<Millimetres>,
+    pub snow: Option<Millimetres>,
 }
 
 #[derive(Deserialize, Clone)]
@@ -167,6 +173,16 @@ pub struct FeelsLike {
 pub enum TemperatureUnit {
     Celsius,
     Fahrenheit,
+}
+
+pub struct Precipitation {
+    rain_or_snow: RainOrSnow,
+    pub probability: Probability,
+}
+
+pub enum RainOrSnow {
+    Rain(Millimetres),
+    Snow(Millimetres),
 }
 
 impl OneCall {
@@ -222,6 +238,22 @@ impl DailyForecast {
     pub fn sunset(&self, timezone_offset: &TimezoneOffset) -> String {
         self.sunset.time_12h(timezone_offset)
     }
+
+    pub fn precipitation(&self) -> Option<Precipitation> {
+        if let Some(rain) = self.rain {
+            Some(Precipitation {
+                rain_or_snow: RainOrSnow::Rain(rain),
+                probability: self.pop,
+            })
+        } else if let Some(snow) = self.snow {
+            Some(Precipitation {
+                rain_or_snow: RainOrSnow::Snow(snow),
+                probability: self.pop,
+            })
+        } else {
+            None
+        }
+    }
 }
 
 impl Kelvin {
@@ -255,6 +287,33 @@ impl UnixTimestamp {
     }
 }
 
+impl Precipitation {
+    pub fn name(&self) -> &'static str {
+        match self.rain_or_snow {
+            RainOrSnow::Rain(_) => "Rain",
+            RainOrSnow::Snow(_) => "Snow",
+        }
+    }
+
+    pub fn emoji(&self) -> &'static str {
+        match self.rain_or_snow {
+            RainOrSnow::Rain(_) => "🌧️",
+            RainOrSnow::Snow(_) => "🌨️",
+        }
+    }
+
+    pub fn volume(&self) -> Millimetres {
+        match self.rain_or_snow {
+            RainOrSnow::Rain(mm) => mm,
+            RainOrSnow::Snow(mm) => mm,
+        }
+    }
+
+    pub fn probability(&self) -> Probability {
+        self.probability
+    }
+}
+
 impl Display for Celsius {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:.1}°C", self.0)
@@ -270,6 +329,18 @@ impl Display for Fahrenheit {
 impl Display for Percent {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}%", self.0)
+    }
+}
+
+impl Display for Millimetres {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}mm", self.0.round())
+    }
+}
+
+impl Display for Probability {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}%", (self.0 * 100.).round())
     }
 }
 

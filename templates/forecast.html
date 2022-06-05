@@ -26,6 +26,12 @@
         <dt><span class="sym">🌅</span> Sunrise</dt><dd>{{ day.sunrise(forecast.timezone_offset) }}</dd>
         <dt><span class="sym">🌇</span> Sunset</dt><dd>{{ day.sunset(forecast.timezone_offset) }}</dd>
         <dt><span class="sym">🌫</span> Humidity</dt><dd>{{ day.humidity }}</dd>
+        <dt><span class="sym">☁️</span> Clouds</dt><dd>{{ day.clouds }}</dd>
+        {% match day.precipitation() %}
+            {% when Some with (precipitation) %}
+            <dt><span class="sym">{{ precipitation.emoji() }}️</span> {{ precipitation.name() }}</dt><dd>{{ precipitation.volume() }} {{ precipitation.probability() }}</dd>
+            {% when None %}
+        {% endmatch %}
     </dl>
 </div>
 {% endfor %}
