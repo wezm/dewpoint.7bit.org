@@ -2,8 +2,6 @@
 //!
 //! <https://openweathermap.org/api/geocoding-api>
 
-use std::collections::HashMap;
-
 use rocket::http::uri::Origin;
 use rocket::serde::Deserialize;
 use rocket::uri;
@@ -25,9 +23,9 @@ pub struct Location {
     /// Country of the found location
     #[serde(deserialize_with = "country_from_code")]
     pub country: Country,
-    /// Translated names
-    #[serde(default)]
-    local_names: HashMap<String, String>,
+    // /// Translated names
+    // #[serde(default)]
+    // local_names: HashMap<String, String>,
 }
 
 impl Location {

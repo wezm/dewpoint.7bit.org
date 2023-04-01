@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
-use ip2location::DB as GeoDB;
+use ip2location::LocationDB as GeoDB;
 use rocket::fairing::AdHoc;
 use rocket::fs::FileServer;
 use rocket::tokio::select;

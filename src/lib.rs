@@ -13,7 +13,7 @@ use std::sync::Arc;
 
 use celes::Country;
 use chrono::{DateTime, Duration, Utc};
-use ip2location::DB as GeoDB;
+use ip2location::LocationDB as GeoDB;
 use rocket::tokio::sync::Mutex;
 
 use crate::weather::OneCall;
