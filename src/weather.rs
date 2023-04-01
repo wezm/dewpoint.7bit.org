@@ -278,12 +278,12 @@ impl UnixTimestamp {
     }
 
     pub fn to_chrono(self) -> DateTime<Utc> {
-        Utc.timestamp(self.0, 0)
+        Utc.timestamp_opt(self.0, 0).unwrap()
     }
 
     fn in_timezone(self, tz_offset: TimezoneOffset) -> DateTime<FixedOffset> {
         self.to_chrono()
-            .with_timezone(&FixedOffset::east(tz_offset.0))
+            .with_timezone(&FixedOffset::east_opt(tz_offset.0).unwrap())
     }
 }
 
