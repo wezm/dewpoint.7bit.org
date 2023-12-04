@@ -199,6 +199,7 @@ mod filters {
     use super::rocket_uri_macro_about;
     use super::rocket_uri_macro_acknowledgements;
     use super::rocket_uri_macro_home;
+    use chrono::prelude::*;
     use std::{env, fmt};
 
     pub fn git_revision(_: &str) -> ::askama::Result<String> {
@@ -212,5 +213,9 @@ mod filters {
             "acknowledgements" => Ok(uri!(acknowledgements()).to_string()),
             _ => Err(askama::Error::Fmt(fmt::Error)),
         }
+    }
+
+    pub fn year(_: &str) -> ::askama::Result<String> {
+        Ok(Utc::now().year().to_string())
     }
 }
