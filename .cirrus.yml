@@ -7,7 +7,7 @@ env:
 task:
   name: Build (Alpine Linux)
   container:
-    image: alpine:3.17
+    image: alpine:3.18
     cpu: 4
   environment:
     RUSTFLAGS: "-C target-cpu=native"
@@ -24,7 +24,7 @@ task:
 task:
   name: Build (Debian Linux)
   container:
-    image: debian:10-slim
+    image: debian:12-slim
     cpu: 4
   cargo_cache:
     folder: $HOME/.cargo/registry
