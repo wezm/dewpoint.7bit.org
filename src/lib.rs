@@ -431,6 +431,6 @@ impl WeatherCache {
 
 impl Expires for OneCall {
     fn stale(&self, now: DateTime<Utc>) -> bool {
-        (now - self.current.dt.to_chrono()) > Duration::minutes(Self::EXPIRATION_MINS)
+        (now - self.current.dt.to_chrono()) > Duration::try_minutes(Self::EXPIRATION_MINS).unwrap()
     }
 }

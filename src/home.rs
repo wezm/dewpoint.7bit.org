@@ -43,7 +43,7 @@ async fn home<'f>(
             .ip_lookup(ip)
             .ok()
             .and_then(|record| record.country)
-            .map(|country| country.short_name)
+            .map(|country| country.short_name.to_string())
     } else {
         None
     }
