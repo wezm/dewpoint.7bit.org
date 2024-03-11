@@ -7,7 +7,7 @@ env:
 task:
   name: Build (Alpine Linux)
   container:
-    image: alpine:3.18
+    image: alpine:3.19
     cpu: 4
   environment:
     RUSTFLAGS: "-C target-cpu=native"
