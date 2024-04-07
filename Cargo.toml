@@ -10,8 +10,8 @@ edition = "2018"
 askama = { git = "https://github.com/djc/askama.git", features = ["with-rocket"] }
 askama_rocket = { git = "https://github.com/djc/askama.git" }
 celes = "2"
-chrono = { version = "0.4.35", default-features = false, features = ["std", "clock"] }
+chrono = { version = "0.4.37", default-features = false, features = ["std", "clock"] }
 ip2location = "0.5.0"
-reqwest = { version = "0.11.25", default-features = false, features = ["rustls-tls", "json"] }
-rocket = { version = "0.5.0", features = [] }
+reqwest = { version = "0.12.3", default-features = false, features = ["rustls-tls", "json"] }
+rocket = { version = "0.5.0", default-features = false }
 serde_json = "1"
